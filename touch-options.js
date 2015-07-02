@@ -1,13 +1,3 @@
-/* TO-DO:
-
-	- localStorage prefix and suffix.
-	
-	- bulkSave in just one localStorage property.
-	
-	- Load options (not just its values) from localStorage.
-
-*/
-
 (function(global) {
 	"use strict";
 
