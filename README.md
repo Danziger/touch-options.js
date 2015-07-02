@@ -1,5 +1,5 @@
-swapper.js
-==========
+touch-options.js
+================
 
 A JS class to help you manage user settings with just on click/touch.
 
