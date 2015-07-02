@@ -21,9 +21,9 @@ Licensed under the [MIT license](http://opensource.org/licenses/MIT).
 Versioning
 ----------
 
-**CURRENT VERSION:** `2.0.0`
+**CURRENT VERSION:** `1.0.0`
 
-Swapper.js will be maintained under the [Semantic Versioning](http://semver.org) guidelines, so releases will be numbered with the following format when possible:
+`touch-options.js` will be maintained under the [Semantic Versioning](http://semver.org) guidelines, so releases will be numbered with the following format when possible:
 
 `MAJOR.MINOR.PATCH`
 
