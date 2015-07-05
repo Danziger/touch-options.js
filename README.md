@@ -45,3 +45,4 @@ TO-DO
  - [ ] **Bulk save**: Save (and load) every option in just one `localStorage` property.
  - [ ] **Text options**.
  - [ ] **Dynamic options**: Add the possibility of storing option's values alongside with its name, so that they can be loaded without knowing it. This can used to store user-defined custom options.
+ - [ ] **Configurable storage**: Add a parameter to choose between `localStorage` or `chrome.storage`.
