@@ -9,7 +9,7 @@
 	 *	By Dani Gámez Franco, http://gmzcodes.com
 	 *	Licensed under MIT.
 	 *
-	 *	Version: 2.0.2
+	 *	Version: 2.0.3
 	 *	Last Update: 2015-07-07
 	 *
 	 **************************************************************************/
@@ -180,23 +180,25 @@
 
 		var ops = this.ops;
 
-		if(arguments.length === 0) { // Save all:
-			keys = Object.keys(ops);
-		}
+		if(arguments.length === 0) keys = Object.keys(ops); // Save all:
 		
 		if(Object.prototype.toString.call(keys) === "[object Array]") { // Save multiple:
 			for(key in keys) {
 				if(!ops.hasOwnProperty(key)) console.error("TouchOptions: Unknown key '" + key + "'.");
-				else localStorage.setItem(key, ops[key].val);
+				else {
+					try localStorage.setItem(key, ops[key].val);
+					catch(e) console.error("TouchOptions: Something went wrong while saving options. Probably, the localStorage quota has been exceeded.");
+				}
 			}
 		}
 		else { // Save one:
 			if(!ops.hasOwnProperty(keys)) console.error("TouchOptions: Unknown key '" + keys + "'.");
-			else localStorage.setItem(keys, ops[keys].val);
+			else {
+				try localStorage.setItem(keys, ops[keys].val);
+				catch(e) console.error("TouchOptions: Something went wrong while saving options. Probably, the localStorage quota has been exceeded.");
+			}
 		}
 
-		
-		
 		return this; // Chainable
 	};
 	

@@ -9,7 +9,7 @@
 	 *	By Dani Gámez Franco, http://gmzcodes.com
 	 *	Licensed under MIT.
 	 *
-	 *	Version: 2.0.2
+	 *	Version: 2.0.3
 	 *	Last Update: 2015-07-07
 	 *
 	 **************************************************************************/
@@ -196,6 +196,8 @@
 		chrome.storage[this.storage].set(data, function() {
 			if(chrome.runtime.lastError) console.error("TouchOptions: Something went wrong while saving options. They may not have been stored.");
 		});
+		
+		
 		
 		return this; // Chainable
 	};
