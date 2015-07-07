@@ -49,5 +49,5 @@ TO-DO
  - [ ] **Dynamic options**: Add the possibility of storing option's values alongside with its name, so that they can be loaded without knowing it. This can used to store user-defined custom options.
  - [ ] **Bulk save**: Save (and load) every option in just one `localStorage` property.
  - [ ] **`localStorage` naming**: Add a prefixs/suffix to `localStorage` properties created with this class.
- - [ ] **Throtle chrome.storage operations**: To prevent execeding the [different limits](https://developer.chrome.com/extensions/storage) it has.
- - [ ] **Add onChanged event**.
+ - [ ] **Throtle `chrome.storage` operations**: To prevent execeding the [different limits](https://developer.chrome.com/extensions/storage) it has.
+ - [ ] **Add `onChanged` event**.
