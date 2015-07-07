@@ -9,7 +9,7 @@
 	 *	By Dani Gámez Franco, http://gmzcodes.com
 	 *	Licensed under MIT.
 	 *
-	 *	Version: 2.0.0
+	 *	Version: 2.0.1
 	 *	Last Update: 2015-07-07
 	 *
 	 **************************************************************************/
@@ -91,7 +91,7 @@
 		return (val===true || val===false) ? val : ( defaultVal === true ? true : false );
 	};
 
-	TouchOptions.prototype._sanitizeInt = function(val, defaultVal) {
+	TouchOptions.prototype._sanitizeInt = function(val, defaultVal, max) {
 		return Math.min(max, Math.max(0, isNaN(val) ? (isNaN(defaultVal) ? 0 : defaultVal) : val));
 	};
 	
@@ -107,7 +107,7 @@
 	TouchOptions.prototype._loadInt = function(key, defaultVal, max, callback) {
 		chrome.storage[this.storage].get(key, function(items) {
 			if(chrome.runtime.lastError) console.error("TouchOptions: Something went wrong while loading " + key + ".");
-			callback(this._sanitizeInt(parseInt(items[key]), parseInt(defaultVal)), chrome.runtime.lastError);
+			callback(this._sanitizeInt(parseInt(items[key]), parseInt(defaultVal), max), chrome.runtime.lastError);
 		});
 	};		
 	
@@ -143,7 +143,7 @@
 					values: param1
 				};
 				
-				this._updateSwapOption(element, param1[this.ops[key].val]);
+				this._updateSwapOption(element, param1[val]);
 			});
 		}
 		else if(arguments.length >= 1) {
@@ -190,7 +190,7 @@
 		var data = {}; // Prepare data
 		for(key in keys) {
 			if(!ops.hasOwnProperty(key)) console.error("TouchOptions: Unknown key '" + key + "'.");
-			else data[key] = ops[key].value;
+			else data[key] = ops[key].val;
 		}
 
 		chrome.storage[this.storage].set(data, function() {
@@ -326,7 +326,7 @@
 
 				var op = this.ops[key];
 				
-				if(op.hasOwnProperty("values") %% typeof param1 === "number") { // Swap option:
+				if(op.hasOwnProperty("values") && typeof param1 === "number") { // Swap option:
 					
 					if(param1 > op.values.length-1) { // Range validation
 						console.error("TouchOptions: Invalid value '" + param1 + "'.");
@@ -369,7 +369,7 @@
 			var op = ops[key];
 			
 			if(op.hasOwnProperty("values")) // Swap option:
-				this._updateSwapOption(op.element, op.values[op.val = defaultInt); // Update DOM
+				this._updateSwapOption(op.element, op.values[op.val = defaultInt]); // Update DOM
 			else // Toggle option:
 				this._updateBooleanOption(op.element, op.val = defaultBoolean, op.panel); // Update DOM
 		}
