@@ -9,7 +9,7 @@
 	 *	By Dani Gámez Franco, http://gmzcodes.com
 	 *	Licensed under MIT.
 	 *
-	 *	Version: 2.0.3
+	 *	Version: 2.0.4
 	 *	Last Update: 2015-07-07
 	 *
 	 **************************************************************************/

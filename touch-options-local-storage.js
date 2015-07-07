@@ -9,7 +9,7 @@
 	 *	By Dani Gámez Franco, http://gmzcodes.com
 	 *	Licensed under MIT.
 	 *
-	 *	Version: 2.0.3
+	 *	Version: 2.0.4
 	 *	Last Update: 2015-07-07
 	 *
 	 **************************************************************************/
@@ -186,16 +186,16 @@
 			for(key in keys) {
 				if(!ops.hasOwnProperty(key)) console.error("TouchOptions: Unknown key '" + key + "'.");
 				else {
-					try localStorage.setItem(key, ops[key].val);
-					catch(e) console.error("TouchOptions: Something went wrong while saving options. Probably, the localStorage quota has been exceeded.");
+					try { localStorage.setItem(key, ops[key].val); }
+					catch(e) { console.error("TouchOptions: Something went wrong while saving options. Probably, the localStorage quota has been exceeded."); }
 				}
 			}
 		}
 		else { // Save one:
 			if(!ops.hasOwnProperty(keys)) console.error("TouchOptions: Unknown key '" + keys + "'.");
 			else {
-				try localStorage.setItem(keys, ops[keys].val);
-				catch(e) console.error("TouchOptions: Something went wrong while saving options. Probably, the localStorage quota has been exceeded.");
+				try {localStorage.setItem(keys, ops[keys].val); }
+				catch(e) { console.error("TouchOptions: Something went wrong while saving options. Probably, the localStorage quota has been exceeded."); }
 			}
 		}
 
