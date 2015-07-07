@@ -9,7 +9,7 @@
 	 *	By Dani Gámez Franco, http://gmzcodes.com
 	 *	Licensed under MIT.
 	 *
-	 *	Version: 2.0.1
+	 *	Version: 2.0.2
 	 *	Last Update: 2015-07-07
 	 *
 	 **************************************************************************/
@@ -369,7 +369,7 @@
 			var op = ops[key];
 			
 			if(op.hasOwnProperty("values")) // Swap option:
-				this._updateSwapOption(op.element, op.values[op.val = defaultInt]); // Update DOM
+				this._updateSwapOption(op.element, op.values[op.val = Math.min(defaultInt, op.values.length - 1)]); // Update DOM
 			else // Toggle option:
 				this._updateBooleanOption(op.element, op.val = defaultBoolean, op.panel); // Update DOM
 		}

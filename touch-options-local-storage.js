@@ -9,7 +9,7 @@
 	 *	By Dani Gámez Franco, http://gmzcodes.com
 	 *	Licensed under MIT.
 	 *
-	 *	Version: 2.0.0
+	 *	Version: 2.0.2
 	 *	Last Update: 2015-07-07
 	 *
 	 **************************************************************************/
@@ -91,7 +91,7 @@
 		return (val=== 'true' || val==='false') ? val==='true' : ( defaultVal === true ? true : false );
 	};
 
-	TouchOptions.prototype._sanitizeInt = function(val, defaultVal) {
+	TouchOptions.prototype._sanitizeInt = function(val, defaultVal, max) {
 		return Math.min(max, Math.max(0, isNaN(val) ? (isNaN(defaultVal) ? 0 : defaultVal) : val));
 	};
 	
@@ -105,7 +105,7 @@
 	};
 
 	TouchOptions.prototype._loadInt = function(key, defaultVal, max) {
-		return this._sanitizeInt(parseInt(localStorage[key]), parseInt(defaultVal));
+		return this._sanitizeInt(parseInt(localStorage[key]), parseInt(defaultVal), max);
 		
 		
 		
@@ -136,26 +136,26 @@
 			
 			// Swap option:
 			
+			var val = this._loadInt(key, param2, param1.length - 1);
 			
 			this.ops[key] = {
 				element: element,
-				val: this._loadInt(key, param2, param1.length - 1),
+				val: val,
 				values: param1
 			};
 			
-			this._updateSwapOption(element, param1[this.ops[key].val]);
-	
+			this._updateSwapOption(element, param1[val]);
 		}
 		else if(arguments.length >= 1) {
 		
 			// Toggle option:
 
 			var panel = this._isDOMElement(param2) ? param2 : document.getElementById(param2);
-
+			var val = this._loadBoolean(key, param1);
 			
 			this.ops[key] = {
 				element: element,
-				val:  this._loadBoolean(key, param1),
+				val: val,
 				panel: panel
 			};
 		
@@ -187,12 +187,12 @@
 		if(Object.prototype.toString.call(keys) === "[object Array]") { // Save multiple:
 			for(key in keys) {
 				if(!ops.hasOwnProperty(key)) console.error("TouchOptions: Unknown key '" + key + "'.");
-				else localStorage.setItem(key, ops[key]);
+				else localStorage.setItem(key, ops[key].val);
 			}
 		}
 		else { // Save one:
 			if(!ops.hasOwnProperty(keys)) console.error("TouchOptions: Unknown key '" + keys + "'.");
-			else localStorage.setItem(keys, ops[key]);
+			else localStorage.setItem(keys, ops[keys].val);
 		}
 
 		
@@ -326,7 +326,7 @@
 
 				var op = this.ops[key];
 				
-				if(op.hasOwnProperty("values") %% typeof param1 === "number") { // Swap option:
+				if(op.hasOwnProperty("values") && typeof param1 === "number") { // Swap option:
 					
 					if(param1 > op.values.length-1) { // Range validation
 						console.error("TouchOptions: Invalid value '" + param1 + "'.");
@@ -369,7 +369,7 @@
 			var op = ops[key];
 			
 			if(op.hasOwnProperty("values")) // Swap option:
-				this._updateSwapOption(op.element, op.values[op.val = defaultInt); // Update DOM
+				this._updateSwapOption(op.element, op.values[op.val = Math.min(defaultInt, op.values.length - 1)]); // Update DOM
 			else // Toggle option:
 				this._updateBooleanOption(op.element, op.val = defaultBoolean, op.panel); // Update DOM
 		}
