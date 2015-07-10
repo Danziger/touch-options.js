@@ -9,8 +9,8 @@
 	 *	By Dani Gámez Franco, http://gmzcodes.com
 	 *	Licensed under MIT.
 	 *
-	 *	Version: 2.0.4
-	 *	Last Update: 2015-07-07
+	 *	Version: 2.0.5
+	 *	Last Update: 2015-07-10
 	 *
 	 **************************************************************************/
 	
@@ -37,8 +37,9 @@
 
 		// Initialize options:
 
-		options = options || {classNames: {}};
-
+		options = options || {};
+		if(!options.hasOwnProperty("classNames")) options.classNames = {};
+		
 		// Merging options (no need for a merge function yet):
 		
 		this.storage = options.storage === "sync" ? "sync" : "local";
@@ -101,14 +102,14 @@
 		chrome.storage[this.storage].get(key, function(items) {
 			if(chrome.runtime.lastError) console.error("TouchOptions: Something went wrong while loading " + key + ".");
 			callback(this._sanitizeBoolean(items[key], defaultVal), chrome.runtime.lastError);
-		});
+		}.bind(this));
 	};
 
 	TouchOptions.prototype._loadInt = function(key, defaultVal, max, callback) {
 		chrome.storage[this.storage].get(key, function(items) {
 			if(chrome.runtime.lastError) console.error("TouchOptions: Something went wrong while loading " + key + ".");
 			callback(this._sanitizeInt(parseInt(items[key]), parseInt(defaultVal), max), chrome.runtime.lastError);
-		});
+		}.bind(this));
 	};		
 	
 	// PUBLIC STORAGE-TYPE-DEPENDENT METHODS ///////////////////////////////////
@@ -136,31 +137,34 @@
 		
 			// Swap option:
 			
+			var ops = this.ops;
+			
 			this._loadInt(key, param2, param1.length - 1, function(val, err) {
-				this.ops[key] = {
+				ops[key] = {
 					element: element,
-					val: val
+					val: val,
 					values: param1
 				};
 				
 				this._updateSwapOption(element, param1[val]);
-			});
+			}.bind(this));
 		}
 		else if(arguments.length >= 1) {
 		
 			// Toggle option:
 			
+			var ops = this.ops;
 			var panel = this._isDOMElement(param2) ? param2 : document.getElementById(param2);
 
 			this._loadBoolean(key, param1, function(val, err) {
-				this.ops[key] = {
+				ops[key] = {
 					element: element,
 					val:  val,
 					panel: panel
 				};
 			
 				this._updateBooleanOption(element, val, panel);
-			});
+			}.bind(this));
 		}
 		else {
 			console.error("TouchOptions: Invalid arguments.");
@@ -188,7 +192,8 @@
 		}
 		
 		var data = {}; // Prepare data
-		for(key in keys) {
+		for(var i in keys) {
+			var key = keys[i];
 			if(!ops.hasOwnProperty(key)) console.error("TouchOptions: Unknown key '" + key + "'.");
 			else data[key] = ops[key].val;
 		}
@@ -205,7 +210,7 @@
 	// touchOptions.getBytesInUse(callback)
 	TouchOptions.prototype.getBytesInUse = function(callback) {
 		var ops = this.ops, string = "";
-		for(key in ops) string += key + ops[key].val;
+		for(var key in ops) string += key + ops[key].val;
 		
 		chrome.storage[this.storage].getBytesInUse(this.getKeys, function(bytesInUse) {
 			if(chrome.runtime.lastError) console.error("TouchOptions: Something went wrong while retrieving the bytes in use. The calculated value is returned instead.");
@@ -223,11 +228,12 @@
 	TouchOptions.prototype.remove = function(keys) {
 
 		if(arguments.length === 0) { // Remove all:
+
 			keys = Object.keys(this.ops);
 			this.ops = {};
 		}
 		else if(Object.prototype.toString.call(keys) === "[object Array]") { // Remove multiple:
-			for(key in keys) delete this.ops[key]; // It does NOT matter if id does not exist (:
+			for(var i in keys) delete this.ops[keys[i]]; // It does NOT matter if id does not exist (:
 		}
 		else { // Remove one:
 			delete this.ops[keys]; // It does NOT matter if id does not exist (:
@@ -270,7 +276,7 @@
 
 		if(arguments.length === 0) { // Reload all
 			var ops = this.ops;
-			for(key in ops) r(ops[key]);
+			for(var key in ops) r(ops[key]);
 		}
 		else { // Reload one
 			r(this.ops[keys]);
@@ -322,7 +328,9 @@
 		
 		var validKeys = [];
 		
-		for(key in keys) {
+		for(var i in keys) {
+			
+			var key = keys[i];
 			
 			if(this.ops.hasOwnProperty(key)) {
 
@@ -367,7 +375,7 @@
 
 		var ops = this.ops;
 
-		for(key in ops) {
+		for(var key in ops) {
 			var op = ops[key];
 			
 			if(op.hasOwnProperty("values")) // Swap option:
@@ -418,14 +426,14 @@
 	// touchOptions.getValues()
 	TouchOptions.prototype.getValues = function() {
 		var ops = this.ops, values = {};
-		for(key in ops) values[key] = ops[key].val;
+		for(var key in ops) values[key] = ops[key].val;
 		return values; // NOT chainable.
 	}
 	
 	// touchOptions.getElements()
 	TouchOptions.prototype.getElements = function() {
 		var ops = this.ops, elements = {};
-		for(key in ops) elements[key] = ops[key].element;
+		for(var key in ops) elements[key] = ops[key].element;
 		return elements; // NOT chainable.
 	}
 	

@@ -9,8 +9,8 @@
 	 *	By Dani Gámez Franco, http://gmzcodes.com
 	 *	Licensed under MIT.
 	 *
-	 *	Version: 2.0.4
-	 *	Last Update: 2015-07-07
+	 *	Version: 2.0.5
+	 *	Last Update: 2015-07-10
 	 *
 	 **************************************************************************/
 	
@@ -37,7 +37,8 @@
 
 		// Initialize options:
 
-		options = options || {classNames: {}};
+		options = options || {};
+		if(!options.hasOwnProperty("classNames")) options.classNames = {};
 
 		// Merging options (no need for a merge function yet):
 		
@@ -138,11 +139,13 @@
 			
 			var val = this._loadInt(key, param2, param1.length - 1);
 			
+			
 			this.ops[key] = {
 				element: element,
 				val: val,
 				values: param1
 			};
+			
 			
 			this._updateSwapOption(element, param1[val]);
 		}
@@ -152,6 +155,7 @@
 
 			var panel = this._isDOMElement(param2) ? param2 : document.getElementById(param2);
 			var val = this._loadBoolean(key, param1);
+			
 			
 			this.ops[key] = {
 				element: element,
@@ -183,7 +187,8 @@
 		if(arguments.length === 0) keys = Object.keys(ops); // Save all:
 		
 		if(Object.prototype.toString.call(keys) === "[object Array]") { // Save multiple:
-			for(key in keys) {
+			for(var i in keys) {
+				var key = keys[i];
 				if(!ops.hasOwnProperty(key)) console.error("TouchOptions: Unknown key '" + key + "'.");
 				else {
 					try { localStorage.setItem(key, ops[key].val); }
@@ -205,7 +210,7 @@
 	// touchOptions.getBytesInUse()
 	TouchOptions.prototype.getBytesInUse = function() {
 		var ops = this.ops, string = "";
-		for(key in ops) string += key + ops[key].val;
+		for(var key in ops) string += key + ops[key].val;
 		
 		
 		
@@ -223,8 +228,9 @@
 	TouchOptions.prototype.remove = function(keys) {
 
 		if(arguments.length === 0) { // Remove all:
-			for(key in Object.keys(this.ops)) localStorage.removeItem(key);
-			this.ops = {};
+			var ops = this.ops;
+			for(var i in Object.keys(ops)) localStorage.removeItem(ops[i]);
+			ops = {};
 		}
 		else if(Object.prototype.toString.call(keys) === "[object Array]") { // Remove multiple:
 			for(key in keys) {
@@ -270,7 +276,7 @@
 
 		if(arguments.length === 0) { // Reload all
 			var ops = this.ops;
-			for(key in ops) r(ops[key]);
+			for(var key in ops) r(ops[key]);
 		}
 		else { // Reload one
 			r(this.ops[keys]);
@@ -322,7 +328,9 @@
 		
 		var validKeys = [];
 		
-		for(key in keys) {
+		for(var i in keys) {
+		
+			var key = keys[i];
 			
 			if(this.ops.hasOwnProperty(key)) {
 
@@ -367,7 +375,7 @@
 
 		var ops = this.ops;
 
-		for(key in ops) {
+		for(var key in ops) {
 			var op = ops[key];
 			
 			if(op.hasOwnProperty("values")) // Swap option:
@@ -418,14 +426,14 @@
 	// touchOptions.getValues()
 	TouchOptions.prototype.getValues = function() {
 		var ops = this.ops, values = {};
-		for(key in ops) values[key] = ops[key].val;
+		for(var key in ops) values[key] = ops[key].val;
 		return values; // NOT chainable.
 	}
 	
 	// touchOptions.getElements()
 	TouchOptions.prototype.getElements = function() {
 		var ops = this.ops, elements = {};
-		for(key in ops) elements[key] = ops[key].element;
+		for(var key in ops) elements[key] = ops[key].element;
 		return elements; // NOT chainable.
 	}
 	
